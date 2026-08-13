@@ -3,48 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบตรวจสอบ OT</title>
+  <title>ระบบขออนุมัติ OT</title>
+  <!-- LINE LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-    body { background-color: #f5f5f5; margin: 0; padding: 16px; color: #333; }
-    .user-card { background: #06c755; color: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .user-card h3 { margin: 0 0 8px 0; font-size: 1.1rem; }
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; font-size: 0.9rem; }
-    .summary-item { background: rgba(255, 255, 255, 0.2); padding: 8px; border-radius: 8px; text-align: center; }
-    .ot-card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .ot-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px; font-weight: bold; }
-    .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
-    .status-approved { background: #e8f5e9; color: #2e7d32; }
-    .status-pending { background: #fff3e0; color: #e65100; }
-    .loading { text-align: center; padding: 20px; color: #666; }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: #f4f6f9; margin: 0; padding: 16px; color: #333; }
+    
+    /* Pop-up / Profile Header */
+    .profile-card { background: linear-gradient(135deg, #06C755, #00B900); color: white; border-radius: 16px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(6,199,85,0.3); margin-bottom: 20px; }
+    .profile-img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid white; margin-bottom: 10px; object-fit: cover; }
+    .profile-card h2 { margin: 0 0 4px 0; font-size: 1.2rem; }
+    .profile-card p { margin: 0; opacity: 0.9; font-size: 0.9rem; }
+    
+    /* Form Card */
+    .form-card { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.95rem; color: #444; }
+    .form-control { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; outline: none; background: #fafafa; }
+    .form-control:focus { border-color: #06C755; background: #fff; }
+    
+    /* Submit Button */
+    .btn-submit { width: 100%; background-color: #06C755; color: white; padding: 14px; border: none; border-radius: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+    .btn-submit:active { background-color: #05a847; }
+    .btn-submit:disabled { background-color: #ccc; cursor: not-allowed; }
+
+    /* History Section */
+    .history-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 12px; color: #333; }
+    .ot-item { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; }
+    .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; }
+    .status-Approved { background: #e8f5e9; color: #2e7d32; }
+    .status-Pending { background: #fff3e0; color: #e65100; }
+    
+    /* Loading */
+    #loading { text-align: center; padding: 40px 20px; color: #666; }
+    .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #06C755; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 10px auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
-  <div id="loading" class="loading">กำลังโหลดข้อมูล...</div>
-
-  <div id="content" style="display: none;">
-    <div class="user-card">
-      <h3 id="user-name">สวัสดีคุณ...</h3>
-      <div id="emp-id-display" style="font-size: 0.85rem; opacity: 0.9;">รหัสพนักงาน: -</div>
-      <div class="summary-grid">
-        <div class="summary-item">สะสมสัปดาห์นี้<br><strong id="accumulated-hours">0</strong> ชม.</div>
-        <div class="summary-item">คงเหลือขอได้<br><strong id="remaining-hours">0</strong> ชม.</div>
-      </div>
-    </div>
-
-    <h3>รายการขอ OT</h3>
-    <div id="ot-list"></div>
+  <!-- Screen Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <div>กำลังโหลดข้อมูลระบบ...</div>
   </div>
 
-  <script>
-    // ⚙️ 1. ใส่ LIFF ID ของคุณ
-    const LIFF_ID = "2010713912-FiQATZ61"; 
+  <!-- Main Content -->
+  <div id="main-content" style="display: none;">
     
-    // ⚙️ 2. วาง Web App URL ที่ได้จาก Step 1 ตรงนี้
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbySszkvf2evZh66I6H0H-6yCi9IKEk8Tud0KN4Pc5Xc24DqxW6BPsGsRbDTN7EOuNRq/exec"; 
+    <!-- 🟢 Pop-up Profile Header -->
+    <div class="profile-card">
+      <img id="user-avatar" class="profile-img" src="https://via.placeholder.com/70" alt="Profile">
+      <h2 id="user-name">สวัสดีคุณ...</h2>
+      <p id="user-emp-id">รหัสพนักงาน: กำลังโหลด...</p>
+    </div>
 
+    <!-- 📝 Form ขอ OT (เน้นเลือกและคลิก) -->
+    <div class="form-card">
+      <form id="ot-form">
+        
+        <!-- เลือกวันที่ -->
+        <div class="form-group">
+          <label for="ot-date">📅 เลือกวันที่ต้องการขอ OT:</label>
+          <input type="date" id="ot-date" class="form-control" required>
+        </div>
+
+        <!-- เลือกชั่วโมง -->
+        <div class="form-group">
+          <label for="ot-hours">⏱️ จำนวนชั่วโมง OT:</label>
+          <select id="ot-hours" class="form-control" required>
+            <option value="1">1 ชั่วโมง</option>
+            <option value="1.5">1.5 ชั่วโมง</option>
+            <option value="2">2 ชั่วโมง</option>
+            <option value="2.5">2.5 ชั่วโมง</option>
+            <option value="3" selected>3 ชั่วโมง</option>
+            <option value="4">4 ชั่วโมง</option>
+          </select>
+        </div>
+
+        <!-- เลือกเหตุผล -->
+        <div class="form-group">
+          <label for="ot-reason">📌 ระบุเหตุผลการขอ OT:</label>
+          <select id="ot-reason" class="form-control">
+            <option value="เคลียร์งานค้างประจำวัน">เคลียร์งานค้างประจำวัน</option>
+            <option value="ทำงานด่วนตามคำสั่งหัวหน้า">ทำงานด่วนตามคำสั่งหัวหน้า</option>
+            <option value="รองรับโหลดงานช่วงสิ้นเดือน">รองรับโหลดงานช่วงสิ้นเดือน</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+          </select>
+        </div>
+
+        <!-- ปุ่มกดส่ง -->
+        <button type="submit" id="btn-save" class="btn-submit">🟢 กดส่งคำขอ OT</button>
+      </form>
+    </div>
+
+    <!-- 📊 ประวัติการขอ OT -->
+    <div class="history-title">📋 ประวัติการขอ OT ของคุณ</div>
+    <div id="ot-history-list"></div>
+
+  </div>
+
+  <!-- ⚙️ JavaScript Logic -->
+  <script>
+    // ==========================================
+    // 🎯 1. จุดที่ต้องแก้ไข 2 จุดหลัก
+    // ==========================================
+    const LIFF_ID = "2010713912-FiQATZ61"; // 👈 ใส่ LIFF ID ตัวจริง
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbxxxxxxxx/exec"; // 👈 ใส่ Web App URL ของ Google Apps Script
+
+    let currentEmpId = "EMP001"; // ค่าเริ่มต้นสำหรับค้นหาใน Sheet
+
+    // เริ่มต้นทำงานเมื่อเปิดหน้าเว็บ
     async function main() {
       try {
         await liff.init({ liffId: LIFF_ID });
@@ -54,59 +125,109 @@
           return;
         }
 
+        // ดึงข้อมูลโปรไฟล์จาก LINE
         const profile = await liff.getProfile();
+        
+        // แสดงรูปและชื่อโปรไฟล์ LINE ใน Pop-up Card
         document.getElementById('user-name').innerText = `สวัสดีคุณ ${profile.displayName}`;
+        if (profile.pictureUrl) {
+          document.getElementById('user-avatar').src = profile.pictureUrl;
+        }
 
-        fetchOTData("EMP001"); 
+        // กำหนดวันที่เริ่มต้นในช่องเลือกวันที่ ให้เป็น "วันนี้" อัตโนมัติ
+        document.getElementById('ot-date').valueToDate = new Date();
+        document.getElementById('ot-date').value = new Date().toISOString().split('T')[0];
+
+        // ดึงข้อมูลประวัติการขอ OT จาก Google Sheet
+        await fetchOTData(currentEmpId);
 
       } catch (err) {
-        console.error("LIFF Error:", err);
-        document.getElementById('loading').innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อ LINE";
+        console.error("LIFF Init Error:", err);
+        alert("ไม่สามารถเชื่อมต่อกับ LINE ได้");
       }
     }
 
+    // ฟังก์ชันดึงข้อมูลประวัติ OT จาก Google Apps Script
     async function fetchOTData(empId) {
       try {
         const response = await fetch(`${GAS_URL}?emp_id=${empId}`);
         const result = await response.json();
 
         document.getElementById('loading').style.display = 'none';
-        document.getElementById('content').style.display = 'block';
+        document.getElementById('main-content').style.display = 'block';
 
         if (result.status === "success" && result.data.length > 0) {
-          renderData(result.data, empId);
+          // ดึงชื่อพนักงานจากข้อมูลแถวแรกมาแสดงใน Pop-up Card
+          const firstRecord = result.data[0];
+          document.getElementById('user-emp-id').innerText = `รหัสพนักงาน: ${empId} (${firstRecord.Emp_Name || ''})`;
+
+          renderHistory(result.data);
         } else {
-          document.getElementById('ot-list').innerHTML = "<p style='text-align:center;'>ไม่พบข้อมูลการขอ OT</p>";
+          document.getElementById('user-emp-id').innerText = `รหัสพนักงาน: ${empId}`;
+          document.getElementById('ot-history-list').innerHTML = "<p style='text-align:center; color:#888;'>ยังไม่มีประวัติการขอ OT</p>";
         }
       } catch (err) {
         console.error("Fetch Error:", err);
-        document.getElementById('loading').innerText = "ดึงข้อมูลไม่สำเร็จ";
+        document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล";
       }
     }
 
-    function renderData(data, empId) {
-      document.getElementById('emp-id-display').innerText = `รหัสพนักงาน: ${empId}`;
-      
-      const lastRecord = data[data.length - 1];
-      document.getElementById('accumulated-hours').innerText = lastRecord.Weekly_Accumulated || 0;
-      document.getElementById('remaining-hours').innerText = lastRecord.Weekly_Remaining || 0;
-
-      let listHtml = "";
-      data.forEach(item => {
-        const statusClass = item.Status === "Approved" ? "status-approved" : "status-pending";
-        listHtml += `
-          <div class="ot-card">
-            <div class="ot-header">
-              <span>วันที่ ${item.Date}</span>
-              <span class="badge ${statusClass}">${item.Status || 'Pending'}</span>
+    // ฟังก์ชันวาดประวัติ OT ลงในหน้าเว็บ
+    function renderHistory(data) {
+      let html = "";
+      // แสดงรายการจากใหม่ไปเก่า (ย้อนกลับ array)
+      data.reverse().forEach(item => {
+        const status = item.Status || 'Pending';
+        const statusText = status === 'Approved' ? 'อนุมัติแล้ว' : 'รออนุมัติ';
+        
+        html += `
+          <div class="ot-item">
+            <div>
+              <strong style="font-size:1rem;">วันที่ ${item.Date}</strong>
+              <div style="font-size:0.85rem; color:#666; margin-top:4px;">
+                ขอ OT: <strong>${item.OT_Requested}</strong> ชั่วโมง
+              </div>
             </div>
-            <div>จำนวนขอ: <strong>${item.OT_Requested}</strong> ชั่วโมง (สัปดาห์ที่ ${item.Week_No})</div>
+            <span class="badge status-${status}">${statusText}</span>
           </div>
         `;
       });
-      document.getElementById('ot-list').innerHTML = listHtml;
+      document.getElementById('ot-history-list').innerHTML = html;
     }
 
+    // อีเวนต์เมื่อกดปุ่ม "กดส่งคำขอ OT"
+    document.getElementById('ot-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('btn-save');
+      btn.disabled = true;
+      btn.innerText = "กำลังบันทึกข้อมูล...";
+
+      const payload = {
+        action: "save_ot",
+        emp_id: currentEmpId,
+        date: document.getElementById('ot-date').value,
+        hours: document.getElementById('ot-hours').value,
+        reason: document.getElementById('ot-reason').value
+      };
+
+      try {
+        // ส่งข้อมูลไปที่ Google Apps Script แบบ POST
+        await fetch(GAS_URL, {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        alert("🟢 บันทึกคำขอ OT เรียบร้อยแล้ว!");
+        location.reload(); // รีโหลดหน้าจอเพื่ออัปเดตประวัติล่าสุด
+      } catch (err) {
+        alert("🔴 เกิดข้อผิดพลาดในการบันทึก กรุณาลองใหม่อีกครั้ง");
+        btn.disabled = false;
+        btn.innerText = "🟢 กดส่งคำขอ OT";
+      }
+    });
+
+    // เรียกฟังก์ชันเริ่มทำงาน
     main();
   </script>
 </body>
