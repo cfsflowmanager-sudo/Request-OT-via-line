@@ -147,30 +147,35 @@
       }
     }
 
-    // ฟังก์ชันดึงข้อมูลประวัติ OT จาก Google Apps Script
-    async function fetchOTData(empId) {
-      try {
-        const response = await fetch(`${GAS_URL}?emp_id=${empId}`);
-        const result = await response.json();
+    // ฟังก์ชันดึงข้อมูล OT และรายชื่อพนักงาน (วางทับฟังก์ชัน fetchOTData เดิม)
+async function fetchOTData() {
+  try {
+    const res = await fetch(`${GAS_URL}?emp_id=${currentEmpId}`);
+    const result = await res.json();
 
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('main-content').style.display = 'block';
-
-        if (result.status === "success" && result.data.length > 0) {
-          // ดึงชื่อพนักงานจากข้อมูลแถวแรกมาแสดงใน Pop-up Card
-          const firstRecord = result.data[0];
-          document.getElementById('user-emp-id').innerText = `รหัสพนักงาน: ${empId} (${firstRecord.Emp_Name || ''})`;
-
-          renderHistory(result.data);
-        } else {
-          document.getElementById('user-emp-id').innerText = `รหัสพนักงาน: ${empId}`;
-          document.getElementById('ot-history-list').innerHTML = "<p style='text-align:center; color:#888;'>ยังไม่มีประวัติการขอ OT</p>";
+    if (result.status === "success") {
+      // 1. นำรายชื่อพนักงานไปใส่ใน Dropdown (<select id="empSelect">)
+      if (result.employees && result.employees.length > 0) {
+        let selectHtml = `<option value="">-- เลือกพนักงาน --</option>`;
+        result.employees.forEach(emp => {
+          let selected = (String(emp.id) === String(currentEmpId)) ? "selected" : "";
+          selectHtml += `<option value="${emp.id}" ${selected}>${emp.id} - ${emp.name}</option>`;
+        });
+        
+        const empSelectElem = document.getElementById('empSelect');
+        if (empSelectElem) {
+          empSelectElem.innerHTML = selectHtml;
         }
-      } catch (err) {
-        console.error("Fetch Error:", err);
-        document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล";
       }
+
+      // 2. แสดงผลประวัติ OT
+      renderOTList(result.data);
     }
+  } catch (err) {
+    console.error("Fetch Error:", err);
+    document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการดึงข้อมูล";
+  }
+}
 
     // ฟังก์ชันวาดประวัติ OT ลงในหน้าเว็บ
     function renderHistory(data) {
