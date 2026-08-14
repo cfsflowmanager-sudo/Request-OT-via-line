@@ -71,42 +71,76 @@
             <option value="">-- กำลังโหลดรายชื่อ... --</option>
           </select>
         </div>
+<!-- 📝 Form ขอ OT -->
+<div class="form-card">
+  <form id="ot-form">
+    
+    <!-- เลือกพนักงาน -->
+    <div class="form-group">
+      <label for="empSelect">👤 เลือกพนักงาน / รหัสพนักงาน:</label>
+      <select id="empSelect" class="form-control" required onchange="onEmpChange(this.value)">
+        <option value="">-- กำลังโหลดรายชื่อ... --</option>
+      </select>
+    </div>
 
-        <!-- เลือกชั่วโมง (เพิ่มตัวเลือกตั้งแต่ 0.5 - 24 ชั่วโมง) -->
-<div class="form-group">
-  <label for="ot-hours">⏱️ จำนวนชั่วโมง OT:</label>
-  <select id="ot-hours" class="form-control" required>
-    <option value="0.5">0.5 ชั่วโมง</option>
-    <option value="1">1 ชั่วโมง</option>
-    <option value="1.5">1.5 ชั่วโมง</option>
-    <option value="2">2 ชั่วโมง</option>
-    <option value="2.5">2.5 ชั่วโมง</option>
-    <option value="3" selected>3 ชั่วโมง (ค่าเริ่มต้น)</option>
-    <option value="3.5">3.5 ชั่วโมง</option>
-    <option value="4">4 ชั่วโมง</option>
-    <option value="4.5">4.5 ชั่วโมง</option>
-    <option value="5">5 ชั่วโมง</option>
-    <option value="5.5">5.5 ชั่วโมง</option>
-    <option value="6">6 ชั่วโมง</option>
-    <option value="7">7 ชั่วโมง</option>
-    <option value="8">8 ชั่วโมง</option>
-    <option value="9">9 ชั่วโมง</option>
-    <option value="10">10 ชั่วโมง</option>
-    <option value="12">12 ชั่วโมง</option>
-    <option value="16">16 ชั่วโมง</option>
-    <option value="20">20 ชั่วโมง</option>
-    <option value="24">24 ชั่วโมง</option>
-  </select>
+    <!-- เลือกวันที่ -->
+    <div class="form-group">
+      <label for="ot-date">📅 เลือกวันที่ต้องการขอ OT:</label>
+      <input type="date" id="ot-date" class="form-control" required>
+    </div>
+
+    <!-- เลือกชั่วโมง (0.5 - 24 ชม.) -->
+    <div class="form-group">
+      <label for="ot-hours">⏱️ จำนวนชั่วโมง OT:</label>
+      <select id="ot-hours" class="form-control" required>
+        <option value="0.5">0.5 ชั่วโมง</option>
+        <option value="1">1 ชั่วโมง</option>
+        <option value="1.5">1.5 ชั่วโมง</option>
+        <option value="2">2 ชั่วโมง</option>
+        <option value="2.5">2.5 ชั่วโมง</option>
+        <option value="3" selected>3 ชั่วโมง (ค่าเริ่มต้น)</option>
+        <option value="3.5">3.5 ชั่วโมง</option>
+        <option value="4">4 ชั่วโมง</option>
+        <option value="4.5">4.5 ชั่วโมง</option>
+        <option value="5">5 ชั่วโมง</option>
+        <option value="5.5">5.5 ชั่วโมง</option>
+        <option value="6">6 ชั่วโมง</option>
+        <option value="7">7 ชั่วโมง</option>
+        <option value="8">8 ชั่วโมง</option>
+        <option value="9">9 ชั่วโมง</option>
+        <option value="10">10 ชั่วโมง</option>
+        <option value="12">12 ชั่วโมง</option>
+        <option value="16">16 ชั่วโมง</option>
+        <option value="20">20 ชั่วโมง</option>
+        <option value="24">24 ชั่วโมง</option>
+      </select>
+    </div>
+
+    <!-- เลือกเหตุผล (แก้ value ให้ตรงกันแล้ว) -->
+    <div class="form-group">
+      <label for="ot-reason">📌 ระบุเหตุผลการขอ OT:</label>
+      <select id="ot-reason" class="form-control">
+        <option value="เคลียร์งานค้างประจำวัน">เคลียร์งานค้างประจำวัน</option>
+        <option value="ทำงานด่วนตามคำสั่งหัวหน้า">ทำงานด่วนตามคำสั่งหัวหน้า</option>
+        <option value="รองรับโหลดงานช่วงสิ้นสัปดาห์">รองรับโหลดงานช่วงสิ้นสัปดาห์</option>
+        <option value="รองรับโหลดงานช่วงกลางเดือน">รองรับโหลดงานช่วงกลางเดือน</option>
+        <option value="รองรับโหลดงานช่วงสิ้นเดือน">รองรับโหลดงานช่วงสิ้นเดือน</option>
+        <option value="อื่นๆ">อื่นๆ</option>
+      </select>
+    </div>
+
+    <!-- ปุ่มกดส่ง -->
+    <button type="submit" id="btn-save" class="btn-submit">🟢 กดส่งคำขอ OT</button>
+  </form>
 </div>
-
         <!-- เลือกเหตุผล -->
         <div class="form-group">
           <label for="ot-reason">📌 ระบุเหตุผลการขอ OT:</label>
           <select id="ot-reason" class="form-control">
             <option value="เคลียร์งานค้างประจำวัน">เคลียร์งานค้างประจำวัน</option>
             <option value="ทำงานด่วนตามคำสั่งหัวหน้า">ทำงานด่วนตามคำสั่งหัวหน้า</option>
-            <option value="รองรับโหลดงานช่วงสิ้นเดือน">รองรับโหลดงานช่วงสิ้นสัปดาห์</option>
-            <option value="รองรับโหลดงานช่วงสิ้นเดือน">รองรับโหลดงานช่วงกลางเดือน</option>
+            <option value="รองรับโหลดงานช่วงสิ้นสัปดาห์">รองรับโหลดงานช่วงสิ้นสัปดาห์</option>
+            <option value="รองรับโหลดงานช่วงกลางเดือน">รองรับโหลดงานช่วงกลางเดือน</option>
             <option value="รองรับโหลดงานช่วงสิ้นเดือน">รองรับโหลดงานช่วงสิ้นเดือน</option>
             <option value="อื่นๆ">อื่นๆ</option>
           </select>
