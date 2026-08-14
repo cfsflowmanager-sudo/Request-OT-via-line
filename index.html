@@ -64,68 +64,65 @@
     <div class="form-card">
       <form id="ot-form">
         
-        <!-- 🟢 เลือกพนักงาน (เพิ่มส่วน Dropdown ที่หายไป) -->
+        <!-- เลือกพนักงาน -->
         <div class="form-group">
           <label for="empSelect">👤 เลือกพนักงาน / รหัสพนักงาน:</label>
-          <select id="empSelect" class="form-control" required onchange="onEmpChange(this.value)">
+          <select id="empSelect" class="form-control" required onchange="onEmpChange(this)">
             <option value="">-- กำลังโหลดรายชื่อ... --</option>
           </select>
         </div>
-<!-- 📝 Form ขอ OT -->
-<div class="form-card">
-  <form id="ot-form">
-    
-       <!-- เลือกวันที่ -->
-    <div class="form-group">
-      <label for="ot-date">📅 เลือกวันที่ต้องการขอ OT:</label>
-      <input type="date" id="ot-date" class="form-control" required>
+
+        <!-- เลือกวันที่ -->
+        <div class="form-group">
+          <label for="ot-date">📅 เลือกวันที่ต้องการขอ OT:</label>
+          <input type="date" id="ot-date" class="form-control" required>
+        </div>
+
+        <!-- เลือกชั่วโมง (0.5 - 24 ชม.) -->
+        <div class="form-group">
+          <label for="ot-hours">⏱️ จำนวนชั่วโมง OT:</label>
+          <select id="ot-hours" class="form-control" required>
+            <option value="0.5">0.5 ชั่วโมง</option>
+            <option value="1">1 ชั่วโมง</option>
+            <option value="1.5">1.5 ชั่วโมง</option>
+            <option value="2">2 ชั่วโมง</option>
+            <option value="2.5">2.5 ชั่วโมง</option>
+            <option value="3" selected>3 ชั่วโมง (ค่าเริ่มต้น)</option>
+            <option value="3.5">3.5 ชั่วโมง</option>
+            <option value="4">4 ชั่วโมง</option>
+            <option value="4.5">4.5 ชั่วโมง</option>
+            <option value="5">5 ชั่วโมง</option>
+            <option value="5.5">5.5 ชั่วโมง</option>
+            <option value="6">6 ชั่วโมง</option>
+            <option value="7">7 ชั่วโมง</option>
+            <option value="8">8 ชั่วโมง</option>
+            <option value="9">9 ชั่วโมง</option>
+            <option value="10">10 ชั่วโมง</option>
+            <option value="12">12 ชั่วโมง</option>
+            <option value="16">16 ชั่วโมง</option>
+            <option value="20">20 ชั่วโมง</option>
+            <option value="24">24 ชั่วโมง</option>
+          </select>
+        </div>
+
+        <!-- เลือกเหตุผล -->
+        <div class="form-group">
+          <label for="ot-reason">📌 ระบุเหตุผลการขอ OT:</label>
+          <select id="ot-reason" class="form-control">
+            <option value="เคลียร์งานค้างประจำวัน">เคลียร์งานค้างประจำวัน</option>
+            <option value="ทำงานด่วนตามคำสั่งหัวหน้า">ทำงานด่วนตามคำสั่งหัวหน้า</option>
+            <option value="รองรับโหลดงานช่วงสิ้นสัปดาห์">รองรับโหลดงานช่วงสิ้นสัปดาห์</option>
+            <option value="รองรับโหลดงานช่วงกลางเดือน">รองรับโหลดงานช่วงกลางเดือน</option>
+            <option value="รองรับโหลดงานช่วงสิ้นเดือน">รองรับโหลดงานช่วงสิ้นเดือน</option>
+            <option value="อื่นๆ">อื่นๆ</option>
+          </select>
+        </div>
+
+        <!-- ปุ่มกดส่ง -->
+        <button type="submit" id="btn-save" class="btn-submit">🟢 กดส่งคำขอ OT</button>
+      </form>
     </div>
 
-    <!-- เลือกชั่วโมง (0.5 - 24 ชม.) -->
-    <div class="form-group">
-      <label for="ot-hours">⏱️ จำนวนชั่วโมง OT:</label>
-      <select id="ot-hours" class="form-control" required>
-        <option value="0.5">0.5 ชั่วโมง</option>
-        <option value="1">1 ชั่วโมง</option>
-        <option value="1.5">1.5 ชั่วโมง</option>
-        <option value="2">2 ชั่วโมง</option>
-        <option value="2.5">2.5 ชั่วโมง</option>
-        <option value="3" selected>3 ชั่วโมง (ค่าเริ่มต้น)</option>
-        <option value="3.5">3.5 ชั่วโมง</option>
-        <option value="4">4 ชั่วโมง</option>
-        <option value="4.5">4.5 ชั่วโมง</option>
-        <option value="5">5 ชั่วโมง</option>
-        <option value="5.5">5.5 ชั่วโมง</option>
-        <option value="6">6 ชั่วโมง</option>
-        <option value="7">7 ชั่วโมง</option>
-        <option value="8">8 ชั่วโมง</option>
-        <option value="9">9 ชั่วโมง</option>
-        <option value="10">10 ชั่วโมง</option>
-        <option value="12">12 ชั่วโมง</option>
-        <option value="16">16 ชั่วโมง</option>
-        <option value="20">20 ชั่วโมง</option>
-        <option value="24">24 ชั่วโมง</option>
-      </select>
-    </div>
-
-    <!-- เลือกเหตุผล (แก้ value ให้ตรงกันแล้ว) -->
-    <div class="form-group">
-      <label for="ot-reason">📌 ระบุเหตุผลการขอ OT:</label>
-      <select id="ot-reason" class="form-control">
-        <option value="เคลียร์งานค้างประจำวัน">เคลียร์งานค้างประจำวัน</option>
-        <option value="ทำงานด่วนตามคำสั่งหัวหน้า">ทำงานด่วนตามคำสั่งหัวหน้า</option>
-        <option value="รองรับโหลดงานช่วงสิ้นสัปดาห์">รองรับโหลดงานช่วงสิ้นสัปดาห์</option>
-        <option value="รองรับโหลดงานช่วงกลางเดือน">รองรับโหลดงานช่วงกลางเดือน</option>
-        <option value="รองรับโหลดงานช่วงสิ้นเดือน">รองรับโหลดงานช่วงสิ้นเดือน</option>
-        <option value="อื่นๆ">อื่นๆ</option>
-      </select>
-    </div>
-
-    <!-- ปุ่มกดส่ง -->
-    <button type="submit" id="btn-save" class="btn-submit">🟢 กดส่งคำขอ OT</button>
-  </form>
-</div>
-        
     <!-- 📊 ประวัติการขอ OT -->
     <div class="history-title">📋 ประวัติการขอ OT ของคุณ</div>
     <div id="ot-history-list"></div>
@@ -135,11 +132,11 @@
   <!-- ⚙️ JavaScript Logic -->
   <script>
     const LIFF_ID = "2010713912-FiQATZ61"; 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbwZMdkhpSk3yQGYB6BEJG9FKKAY7WoxMwLGyCm5EzJ2NvxbyHKsc4kNdtB5s4WBojQy/exec"; 
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyLlaf6sic7Hc2RDjPiR4b0KJZLOY4792jzk35FR4XGKXSraS30HeQRVUeEqLTUzgBx/exec"; 
 
-    let currentEmpId = "1220764"; // ค่าเริ่มต้น
+    let currentEmpId = "1220764"; 
+    let currentEmpName = "";
 
-    // เริ่มต้นทำงานเมื่อเปิดหน้าเว็บ
     async function main() {
       try {
         await liff.init({ liffId: LIFF_ID });
@@ -149,20 +146,16 @@
           return;
         }
 
-        // ดึงข้อมูลโปรไฟล์จาก LINE
         const profile = await liff.getProfile();
         document.getElementById('user-name').innerText = `สวัสดีคุณ ${profile.displayName}`;
         if (profile.pictureUrl) {
           document.getElementById('user-avatar').src = profile.pictureUrl;
         }
 
-        // กำหนดวันที่เริ่มต้นเป็น "วันนี้"
         document.getElementById('ot-date').value = new Date().toISOString().split('T')[0];
 
-        // ดึงข้อมูลประวัติ และ รายชื่อพนักงาน
         await fetchOTData();
 
-        // ปิดหน้า Loading และแสดงเนื้อหาหลัก
         document.getElementById('loading').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
 
@@ -172,19 +165,18 @@
       }
     }
 
-    // ฟังก์ชันดึงข้อมูล OT และรายชื่อพนักงาน
     async function fetchOTData() {
       try {
         const res = await fetch(`${GAS_URL}?emp_id=${currentEmpId}`);
         const result = await res.json();
 
         if (result.status === "success") {
-          // 1. สร้าง Dropdown รายชื่อพนักงาน
           if (result.employees && result.employees.length > 0) {
             let selectHtml = `<option value="">-- เลือกพนักงาน --</option>`;
             result.employees.forEach(emp => {
               let selected = (String(emp.id) === String(currentEmpId)) ? "selected" : "";
-              selectHtml += `<option value="${emp.id}" ${selected}>${emp.id} - ${emp.name}</option>`;
+              if (selected) currentEmpName = emp.name;
+              selectHtml += `<option value="${emp.id}" data-name="${emp.name}" ${selected}>${emp.id} - ${emp.name}</option>`;
             });
             
             const empSelectElem = document.getElementById('empSelect');
@@ -193,7 +185,6 @@
             }
           }
 
-          // 2. แสดงผลประวัติ OT
           renderHistory(result.data);
         }
       } catch (err) {
@@ -202,15 +193,18 @@
       }
     }
 
-    // ฟังก์ชันเมื่อเปลี่ยนการเลือกพนักงานใน Dropdown
-    async function onEmpChange(empId) {
+    function onEmpChange(selectObj) {
+      const empId = selectObj.value;
       if (!empId) return;
+      
       currentEmpId = empId;
+      const selectedOption = selectObj.options[selectObj.selectedIndex];
+      currentEmpName = selectedOption.getAttribute('data-name') || "";
+
       document.getElementById('ot-history-list').innerHTML = "<div style='text-align:center;'>กำลังโหลดประวัติ...</div>";
-      await fetchOTData();
+      fetchOTData();
     }
 
-    // ฟังก์ชันวาดประวัติ OT ลงในหน้าเว็บ
     function renderHistory(data) {
       if (!data || data.length === 0) {
         document.getElementById('ot-history-list').innerHTML = "<div style='text-align:center; color:#888;'>ไม่มีประวัติการขอ OT</div>";
@@ -218,12 +212,10 @@
       }
 
       let html = "";
-      // แสดงรายการย้อนกลับ (ใหม่ไปเก่า)
       [...data].reverse().forEach(item => {
         const status = item.Status || 'Pending';
         const statusText = status === 'Approved' ? 'อนุมัติแล้ว' : 'รออนุมัติ';
         
-        // จัดการวันที่ตัดเอาแค่ YYYY-MM-DD
         let rawDate = item.Date ? String(item.Date).split('T')[0] : '-';
         let hours = item.OT_Requested || item.Hours || '-';
 
@@ -242,7 +234,6 @@
       document.getElementById('ot-history-list').innerHTML = html;
     }
 
-    // อีเวนต์เมื่อกดปุ่ม "กดส่งคำขอ OT"
     document.getElementById('ot-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -250,8 +241,14 @@
       btn.disabled = true;
       btn.innerText = "กำลังบันทึกข้อมูล...";
 
+      // ดึงชื่อพนักงานจาก Option ที่เลือก ณ ตอนส่งอีกครั้ง
+      const empSelectElem = document.getElementById('empSelect');
+      const selectedOption = empSelectElem.options[empSelectElem.selectedIndex];
+      const empNameToSend = selectedOption ? selectedOption.getAttribute('data-name') : currentEmpName;
+
       const payload = {
         emp_id: currentEmpId,
+        emp_name: empNameToSend,
         date: document.getElementById('ot-date').value,
         hours: document.getElementById('ot-hours').value,
         reason: document.getElementById('ot-reason').value
@@ -272,7 +269,6 @@
       }
     });
 
-    // เรียกฟังก์ชันเริ่มทำงาน
     main();
   </script>
 </body>
